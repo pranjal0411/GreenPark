@@ -109,9 +109,9 @@ export default function Dashboard() {
 
           <div className="h-[600px] w-full rounded-xl overflow-hidden glass-panel border border-slate-700/50 relative">
              {isARMode ? (
-               <ARMapVisualizer data={data} />
+               <ARMapVisualizer key={data.stats.total_area_km2} data={data} />
              ) : (
-               <MapComponent data={data} />
+               <MapComponent key={data.stats.total_area_km2} data={data} />
              )}
           </div>
         </>
