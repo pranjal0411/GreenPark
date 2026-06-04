@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: greenpark-backend
+    env: python
+    rootDir: .
+    buildCommand: "pip install -r requirements.txt -r backend/requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
