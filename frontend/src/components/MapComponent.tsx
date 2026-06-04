@@ -1,17 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface MapComponentProps {
   data: any;
-}
-
-function ChangeView({ center }: { center: [number, number] }) {
-  const map = useMap();
-  map.setView(center, 11);
-  return null;
 }
 
 export default function MapComponent({ data }: MapComponentProps) {
@@ -35,12 +29,12 @@ export default function MapComponent({ data }: MapComponentProps) {
 
   return (
     <MapContainer 
+      key={dataKey}
       center={center} 
       zoom={11} 
       style={{ height: "100%", width: "100%" }}
       ref={mapRef}
     >
-      <ChangeView center={center} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
