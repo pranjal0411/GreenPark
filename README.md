@@ -1,3 +1,11 @@
+---
+title: Greenpark Backend
+emoji: 🌍
+colorFrom: green
+colorTo: blue
+sdk: docker
+app_port: 7860
+---
 # GreenPark_Py: Greenness Exposure Assessment in Python <img src="Plots/GreenPark_PyLogo.png" align="right" height="150"/>
 
 # Aim and objectives

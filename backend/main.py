@@ -27,6 +27,18 @@ class CityRequest(BaseModel):
 @app.post("/api/analyze")
 def analyze_city(req: CityRequest):
     try:
+        cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+        os.makedirs(cache_dir, exist_ok=True)
+        # Create a safe filename by removing spaces and commas
+        safe_city_name = req.city_name.replace(" ", "_").replace(",", "")
+        cache_file = os.path.join(cache_dir, f"{safe_city_name}_{req.buffer_dist}.json")
+
+        if os.path.exists(cache_file):
+            print(f"Returning cached data for {req.city_name}")
+            with open(cache_file, 'r') as f:
+                return json.load(f)
+
+        print(f"Calculating data for {req.city_name} (No cache found)...")
         boundary = green_deserts.fetch_city_boundary(req.city_name)
         if boundary is None:
             raise HTTPException(status_code=400, detail="Failed to fetch city boundary")
@@ -56,7 +68,7 @@ def analyze_city(req: CityRequest):
         }
         
         # Convert GDFs to GeoJSON format (Lat/Lon)
-        return {
+        response_data = {
             "metrics": metrics,
             "stats": stats,
             "geojson": {
@@ -66,6 +78,15 @@ def analyze_city(req: CityRequest):
                 "underserved": json.loads(underserved.to_crs(epsg=4326).to_json())
             }
         }
+
+        # Save to cache
+        try:
+            with open(cache_file, 'w') as f:
+                json.dump(response_data, f)
+        except Exception as e:
+            print(f"Warning: Failed to save cache file: {e}")
+
+        return response_data
     except Exception as e:
         import traceback
         traceback.print_exc()
